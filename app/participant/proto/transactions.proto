@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "app/participant/proto;transaction";
+
+package participant;
+
+import "google/protobuf/any.proto";
+
+service TransactionService {
+    rpc Begin(BeginRequest) returns (BeginReply);
+    rpc Query(QueryRequest) returns (QueryReply);
+    rpc Abort(AbortRequest) returns (AbortReply);
+}
+
+message BeginRequest {}
+
+message BeginReply {
+    string tx_id = 1;
+}
+
+message QueryRequest {
+    string tx_id = 1;
+    string sql_statement = 2;
+    repeated google.protobuf.Any args = 3;
+}
+
+message QueryReply {
+    repeated Row results = 1;
+}
+
+message Row {
+    map<string, google.protobuf.Any> columns = 1;
+}
+
+message AbortRequest {
+    string tx_id = 1;
+}
+
+message AbortReply {
+    bool success = 1;
+}
